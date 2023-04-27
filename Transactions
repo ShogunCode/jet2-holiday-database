@@ -1,0 +1,70 @@
+** TRANSACTIONS - SQL - DEMO BOOKING 
+
+-- Show all airports that the customer can travel to 
+SELECT * FROM airport 
+
+-- Show all flights from Belfast to Faro
+SELECT * FROM flight WHERE route_id = '1' 
+
+-- Show all resorts in the Algarve that are beside Faro airport 
+SELECT * FROM resort WHERE resort_region = '1' 
+
+-- Show all hotels in Albuferia, The Algarve that have a kids pool and babysitting service 
+SELECT * FROM hotel_features WHERE hotel_id = '1' AND hotel_features_list_id = '1' OR hotel_features_list_id = '7';
+
+-- Show all the rooms in the hotel Sao Rafael Atlantico
+SELECT * FROM `hotel_room` WHERE hotel_id = '1';
+
+SELECT * FROM `room_price` WHERE hotel_room_id = 1
+
+-- Transaction to make a booking for the package holiday 
+
+START TRANSACTION;
+
+INSERT INTO booking_detail(booking_detail_id, item_name, item_description, price_paid, booking_id) VALUES (NULL,'Belfast to Faro','Arrival Flight 2 Adults 1 child',340,1);
+SET @last_id_in_booking_detail=LAST_INSERT_ID();
+
+INSERT INTO booking_detail(booking_detail_id, item_name, item_description, price_paid, booking_id) VALUES (NULL,'Belfast to Faro','Departure Flight 2 Adults 1 child',300,1);
+SET @last_id_in_booking_detail=LAST_INSERT_ID();
+
+INSERT INTO booking_detail(booking_detail_id, item_name, item_description, price_paid, booking_id) VALUES (NULL,'Family Room','Family Room for 7 nights ',805,1);
+SET @last_id_in_booking_detail=LAST_INSERT_ID();
+
+INSERT INTO room_booking(room_booking_id,hotel_room_id,booking_id)
+						VALUES (NULL,1,1);
+                        SET @last_id_in_room_booking=LAST_INSERT_ID();
+
+INSERT INTO booking(booking_id, booking_made_datetime, booking_dep_date, booking_duration_days, booking_timestamp, booking_reference, booking_total_cost, customer_id, dep_flight_id, ret_flight_id, room_booking_id, booking_detail_id) 
+						VALUES (NULL,CURRENT_TIMESTAMP,'20230620 13:00:00',7,CURRENT_TIMESTAMP,'ABC123',0,1,1,4,1,@last_id_in_booking_detail);
+                        SET @last_id_in_booking=LAST_INSERT_ID();
+
+
+INSERT INTO passenger(passenger_id,first_name,last_name,date_of_birth,is_lead_passenger,passenger_type_id,passenger_passport,title_id,booking_id)
+                        VALUES (NULL,'Conall','Murphy','19950620',1,1,1,1,@last_id_in_booking);
+                        SET @last_id_in_passenger=LAST_INSERT_ID();
+
+INSERT INTO passenger(passenger_id,first_name,last_name,date_of_birth,is_lead_passenger,passenger_type_id,passenger_passport,title_id,booking_id)
+                        VALUES (NULL,'Anne','Murphy','19950210',0,1,2,3,@last_id_in_booking);
+                        SET @last_id_in_passenger=LAST_INSERT_ID();
+
+INSERT INTO passenger(passenger_id,first_name,last_name,date_of_birth,is_lead_passenger,passenger_type_id,passenger_passport,title_id,booking_id)
+                        VALUES (NULL,'Seamus','Murphy','20170620',0,2,1,1,@last_id_in_booking);
+                        SET @last_id_in_passenger=LAST_INSERT_ID();
+                        
+COMMIT;
+
+-- Update the total cost for the holiday in booking table 
+
+SET @sumTotalCost = (SELECT SUM(price_paid) FROM booking_detail WHERE booking_id = 1);
+SELECT SUM(price_paid) FROM booking_detail WHERE booking_id = 1;
+UPDATE booking SET booking_total_cost = @sumTotalCost;
+SELECT * FROM booking;
+
+-- Encryption of card details
+
+INSERT INTO `payment_card`(`payment_card_id`, `cardholder_name`, `card_long_number`, `security_code`, `card_start_date`, `card_end_date`, `card_type_id`) 
+VALUES (NULL,'K West', AES_ENCRYPT('1234567812345678','ihateH4ackers'), AES_ENCRYPT('111','ihateH4ackers'), 20220606, 20220707, 1)
+
+-- Decryption of card details 
+
+SELECT AES_DECRYPT(card_long_number,'ihateH4ackers'), AES_DECRYPT(security_code,'ihateH4ackers') FROM `payment_card` WHERE 1
