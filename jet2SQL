@@ -1,0 +1,1318 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Nov 07, 2022 at 10:07 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `jet2 holiday database replication`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `address`
+--
+
+CREATE TABLE `address` (
+  `address_id` int(11) NOT NULL,
+  `building_num` int(11) NOT NULL,
+  `building_name` varchar(255) NOT NULL,
+  `address_line_1` varchar(255) NOT NULL,
+  `address_line_2` varchar(255) NOT NULL,
+  `postcode` varchar(255) NOT NULL,
+  `gps_lat` decimal(10,8) NOT NULL,
+  `gps_long` decimal(11,8) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `country_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `address`
+--
+
+INSERT INTO `address` (`address_id`, `building_num`, `building_name`, `address_line_1`, `address_line_2`, `postcode`, `gps_lat`, `gps_long`, `city_id`, `country_id`) VALUES
+(3, 0, 'Belfast International Airport', 'Airport Rd', 'Crumlin', 'BT29 4AB', '54.65750000', '-6.21583300', 1, 4),
+(4, 0, 'São Rafael Atlântico', 'R. dos Corais', '8200-613 ', '', '37.07758200', '-8.28151800', 7, 2),
+(5, 3, '', 'Rossnareen Avenue', '', 'BT12 4PY', '54.57719800', '-6.00281200', 1, 4),
+(6, 0, 'Faro Airport', '8006-901', '', '', '37.01444400', '-7.96583300', 9, 2),
+(7, 0, 'Albuferia Hotel 2', '123 Bier Road ', 'La Canza', '', '99.99999999', '-6.21583300', 7, 2),
+(8, 0, 'Albuferia Hotel 3', '567 Hilltop', 'La Beach ', '', '37.07755400', '-6.21587700', 7, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `airport`
+--
+
+CREATE TABLE `airport` (
+  `airport_id` int(11) NOT NULL,
+  `airport_code` varchar(255) NOT NULL,
+  `airport_name` varchar(255) NOT NULL,
+  `address_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `airport`
+--
+
+INSERT INTO `airport` (`airport_id`, `airport_code`, `airport_name`, `address_id`) VALUES
+(1, 'FAO', 'Faro Airport ', 6),
+(2, 'BFS', 'Belfast International Airport', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `board`
+--
+
+CREATE TABLE `board` (
+  `board_id` int(11) NOT NULL,
+  `hotel_board_name` varchar(255) NOT NULL,
+  `hotel_board_description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `board`
+--
+
+INSERT INTO `board` (`board_id`, `hotel_board_name`, `hotel_board_description`) VALUES
+(3, 'All Inclusive', 'Opt for All Inclusive and your breakfast, lunch and evening meals, along with snacks and locally branded drinks, are included in the price. That means you can relax knowing you don’t need to worry about mealtimes. Before you book, read the full offering of each hotel, as it can vary and sometimes include activities.'),
+(4, 'Full Board', 'Your breakfast, lunch and evening meal are included in the price of a Full Board holiday. That means all you’ve got to worry about are the drinks! It\'s perfect if you’re on a family holiday, as you don’t have to think about where to go and making sure everyone gets what they want. Fancy a little bit more included? Go for Full Board Plus. With this board basis, you’ll enjoy a few extras, as well as your three meals a day. Check with your hotel to see what additional services they’ll offer with Full Board Plus.'),
+(5, 'Half Board', 'With Half Board, both your breakfast and evening meal are already paid for in the price of your holiday, so all the big meals are taken care of! So each morning and night, all you need to worry about is relaxing and tucking into delicious dishes. What’s more, it’s the best of both worlds! At lunch, you get the chance to head out and discover the local cuisine around your resort. Take things up a notch with Half Board Plus. Typically, you can expect some extra services, but it all depends on the hotel you book.'),
+(6, 'Bed and Breakfast', 'With this board option, your breakfast is included in the price of your holiday. Usually, this consists of a continental buffet catering to a range of nationalities, however it may change depending on the accommodation. For any foodies, this is a fantastic choice. It means you can load up in the morning before venturing out of your hotel and sampling the local cuisine.\r\n\r\n'),
+(7, 'Self Catering', 'As with Room Only, you don’t have any meals included in the price of your holiday when you pick Self Catering, however you’ll be provided with some catering facilities in your room. Equipment will differ depending on the accommodation. If you’re on a budget or simply love whipping up light meals, this could be the perfect option for you!'),
+(8, 'Room Only', 'As the name might suggest, only the room is included when you choose this option. That means no meals are included in the price you’ve paid for your holiday. This gives you the freedom to dine out as and when you like, so if you’re a food fanatic, then it might be the perfect option for you.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+CREATE TABLE `booking` (
+  `booking_id` int(11) NOT NULL,
+  `booking_made_datetime` datetime NOT NULL DEFAULT current_timestamp(),
+  `booking_dep_date` date NOT NULL,
+  `booking_duration_days` int(11) NOT NULL,
+  `booking_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `booking_reference` int(11) NOT NULL,
+  `booking_total_cost` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `dep_flight_id` int(11) NOT NULL,
+  `ret_flight_id` int(11) NOT NULL,
+  `room_booking_id` int(11) NOT NULL,
+  `booking_detail_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_detail`
+--
+
+CREATE TABLE `booking_detail` (
+  `booking_detail_id` int(11) NOT NULL,
+  `item_name` varchar(255) NOT NULL,
+  `item_description` varchar(255) NOT NULL,
+  `price_paid` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `card_type`
+--
+
+CREATE TABLE `card_type` (
+  `card_type_id` int(11) NOT NULL,
+  `card_type_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `card_type`
+--
+
+INSERT INTO `card_type` (`card_type_id`, `card_type_name`) VALUES
+(1, 'Visa'),
+(2, 'Visa Debit'),
+(3, 'Mastercard'),
+(4, 'American Express');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `city`
+--
+
+CREATE TABLE `city` (
+  `city_id` int(11) NOT NULL,
+  `city_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `city`
+--
+
+INSERT INTO `city` (`city_id`, `city_name`) VALUES
+(1, 'Belfast'),
+(2, 'Dublin'),
+(3, 'Alicante'),
+(4, 'Barcelona '),
+(5, 'Lisbon'),
+(6, 'Porto'),
+(7, 'Albufeira'),
+(8, 'Benidorm'),
+(9, 'Faro');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `country`
+--
+
+CREATE TABLE `country` (
+  `country_id` int(11) NOT NULL,
+  `country_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `country`
+--
+
+INSERT INTO `country` (`country_id`, `country_name`) VALUES
+(1, 'Spain'),
+(2, 'Portugal '),
+(3, 'Malta'),
+(4, 'Northern Ireland'),
+(5, 'Ireland '),
+(6, 'France ');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer`
+--
+
+CREATE TABLE `customer` (
+  `customer_id` int(11) NOT NULL,
+  `is_passenger` tinyint(1) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `telephone_type` varchar(255) NOT NULL,
+  `telephone_number` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `title_id` int(11) NOT NULL,
+  `address_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`customer_id`, `is_passenger`, `first_name`, `last_name`, `telephone_type`, `telephone_number`, `email`, `title_id`, `address_id`) VALUES
+(1, 1, 'Conall', 'Murphy', 'Mobile', '+447522680606', 'conall@live.co.uk', 1, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `flight`
+--
+
+CREATE TABLE `flight` (
+  `flight_id` int(11) NOT NULL,
+  `dep_date_time` datetime NOT NULL,
+  `arr_date_time` datetime NOT NULL,
+  `route_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `flight`
+--
+
+INSERT INTO `flight` (`flight_id`, `dep_date_time`, `arr_date_time`, `route_id`) VALUES
+(1, '2023-06-20 13:00:00', '2023-06-20 16:35:00', 1),
+(2, '2023-06-20 06:45:00', '2023-06-20 10:10:00', 1),
+(3, '2023-06-20 15:15:00', '2023-06-20 20:50:00', 1),
+(4, '2023-06-27 11:00:00', '2022-10-30 14:35:00', 2),
+(5, '2023-06-20 20:20:00', '2023-06-20 20:35:00', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `flight_price`
+--
+
+CREATE TABLE `flight_price` (
+  `flight_price_id` int(11) NOT NULL,
+  `price` int(11) NOT NULL,
+  `passenger_type_id` int(11) NOT NULL,
+  `flight_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `flight_price`
+--
+
+INSERT INTO `flight_price` (`flight_price_id`, `price`, `passenger_type_id`, `flight_id`) VALUES
+(1, 135, 1, 1),
+(2, 100, 1, 2),
+(3, 115, 1, 3),
+(4, 120, 1, 4),
+(5, 100, 1, 5),
+(6, 70, 2, 1),
+(7, 50, 2, 2),
+(8, 60, 2, 3),
+(9, 60, 2, 4),
+(10, 50, 2, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotel`
+--
+
+CREATE TABLE `hotel` (
+  `hotel_id` int(11) NOT NULL,
+  `hotel_name` varchar(255) NOT NULL,
+  `hotel_star_rating` int(5) NOT NULL,
+  `hotel_tripadvisor_rating` int(5) NOT NULL,
+  `address_id` int(11) NOT NULL,
+  `resort_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hotel`
+--
+
+INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `hotel_star_rating`, `hotel_tripadvisor_rating`, `address_id`, `resort_id`) VALUES
+(1, 'Sao Rafael Atlantico', 5, 4, 4, 1),
+(2, 'Albuferia Hotel 2', 2, 2, 7, 1),
+(3, 'Albuferia Hotel 3 ', 3, 3, 8, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotel_board`
+--
+
+CREATE TABLE `hotel_board` (
+  `hotel_board_id` int(11) NOT NULL,
+  `hotel_id` int(11) NOT NULL,
+  `board_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hotel_board`
+--
+
+INSERT INTO `hotel_board` (`hotel_board_id`, `hotel_id`, `board_id`) VALUES
+(1, 1, 6),
+(2, 1, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotel_features`
+--
+
+CREATE TABLE `hotel_features` (
+  `hotel_features_id` int(11) NOT NULL,
+  `hotel_id` int(11) NOT NULL,
+  `hotel_features_list_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hotel_features`
+--
+
+INSERT INTO `hotel_features` (`hotel_features_id`, `hotel_id`, `hotel_features_list_id`) VALUES
+(6, 1, 15),
+(7, 1, 1),
+(8, 1, 13),
+(9, 1, 7),
+(10, 1, 11),
+(11, 1, 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotel_features_list`
+--
+
+CREATE TABLE `hotel_features_list` (
+  `hotel_features_list_id` int(11) NOT NULL,
+  `hotel_features_name` varchar(255) NOT NULL,
+  `hotel_features_description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hotel_features_list`
+--
+
+INSERT INTO `hotel_features_list` (`hotel_features_list_id`, `hotel_features_name`, `hotel_features_description`) VALUES
+(1, 'Children\'s Pool', 'Pool that is suitable for children ages 0-12. Children must be supervised at all times by an adult.'),
+(2, 'Indoor Pool', 'Indoor pool that can be used in all weather conditions.'),
+(3, 'Gym', 'Gym that features state of the art facilities with cardio fitness training equipment, free weights area and fixed strength equipment.'),
+(4, 'Golf Course', 'Golf course with off-site clubhouse.* Reservation required.'),
+(5, 'Daily Evening Entertainment', 'Daily evening entertainment (available between 01 Jun and 31 Oct) including live music.'),
+(6, 'Occasional Evening Entertainment ', 'Occasional evening entertainment (available between 01 Mar and 31 May) including live music.'),
+(7, 'Babysitting Service', 'Babysitting service* (subject to availability and advance booking at reception)'),
+(8, 'Sauna ', 'Hot Coal Sauna '),
+(9, 'Steam Room ', 'Hot Steam Room to clear the airways.'),
+(10, 'Massage Treatments', 'Professional masseuse service with a variety of specialised treatments. (Open between 01 Jan and 31 Dec, between 10.00am and 6.30pm, depending on occupancy).'),
+(11, 'In-door Bar ', 'Alcoholic & soft drinks served.'),
+(12, 'Pool-side Bar ', 'Alcoholic & soft drinks served at pool.'),
+(13, 'Buffet Restaurant ', 'Serves breakfast and dinner. Show cooking at breakfast. Highchairs available. Please note that the hotel requests that beach wear is not worn.'),
+(14, 'A la carte Restaurant ', 'Serves a range of international and local cuisine for dinner. Please note that the hotel requests that beach wear is not worn.'),
+(15, 'Outdoor Pool ', 'Outdoor freshwater pool. Sunbathing area with sunbeds and parasols. Free towels.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotel_room`
+--
+
+CREATE TABLE `hotel_room` (
+  `hotel_room_id` int(11) NOT NULL,
+  `room_name` varchar(255) NOT NULL,
+  `room_max_adults` int(11) NOT NULL,
+  `room_min_adults` int(11) NOT NULL,
+  `room_max_child` int(11) NOT NULL,
+  `room_min_child` int(11) NOT NULL,
+  `room_max_infant` int(11) NOT NULL,
+  `room_min_infant` int(11) NOT NULL,
+  `hotel_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hotel_room`
+--
+
+INSERT INTO `hotel_room` (`hotel_room_id`, `room_name`, `room_max_adults`, `room_min_adults`, `room_max_child`, `room_min_child`, `room_max_infant`, `room_min_infant`, `hotel_id`, `room_type_id`) VALUES
+(1, 'Family Room ', 2, 1, 1, 0, 1, 0, 1, 3),
+(2, 'Luxury Room ', 6, 2, 2, 0, 4, 0, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `images`
+--
+
+CREATE TABLE `images` (
+  `image_id` int(11) NOT NULL,
+  `image_name` varchar(255) NOT NULL,
+  `image_alt_desc` varchar(255) NOT NULL,
+  `image_url` varchar(255) NOT NULL,
+  `hotel_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `passenger`
+--
+
+CREATE TABLE `passenger` (
+  `passenger_id` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `date_of_birth` date NOT NULL,
+  `is_lead_passenger` tinyint(1) NOT NULL,
+  `passenger_type_id` int(11) NOT NULL,
+  `passenger_passport` int(11) NOT NULL,
+  `title_id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `passenger_passport`
+--
+
+CREATE TABLE `passenger_passport` (
+  `passenger_passport_id` int(11) NOT NULL,
+  `passport_number` varchar(8) NOT NULL,
+  `passport_expiry_date` date NOT NULL,
+  `country_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `passenger_passport`
+--
+
+INSERT INTO `passenger_passport` (`passenger_passport_id`, `passport_number`, `passport_expiry_date`, `country_id`) VALUES
+(1, '78654789', '2027-10-01', 5),
+(2, '12345678', '2023-03-10', 5),
+(3, '11365895', '2027-04-01', 4),
+(4, '78651254', '2026-05-08', 5),
+(5, '80021453', '2022-06-07', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `passenger_type`
+--
+
+CREATE TABLE `passenger_type` (
+  `passenger_type_id` int(11) NOT NULL,
+  `passenger_type` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `passenger_type`
+--
+
+INSERT INTO `passenger_type` (`passenger_type_id`, `passenger_type`) VALUES
+(1, 'Adult'),
+(2, 'Child'),
+(3, 'Infant');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment`
+--
+
+CREATE TABLE `payment` (
+  `payment_id` int(11) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `payment_date` date NOT NULL,
+  `payment_card_id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_card`
+--
+
+CREATE TABLE `payment_card` (
+  `payment_card_id` int(11) NOT NULL,
+  `cardholder_name` varchar(255) NOT NULL,
+  `card_long_number` varbinary(255) NOT NULL,
+  `security_code` varbinary(255) NOT NULL,
+  `card_start_date` date NOT NULL,
+  `card_end_date` date NOT NULL,
+  `card_type_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resort`
+--
+
+CREATE TABLE `resort` (
+  `resort_id` int(11) NOT NULL,
+  `resort_name` varchar(255) NOT NULL,
+  `resort_description` text NOT NULL,
+  `resort_region` int(11) NOT NULL,
+  `resort_country_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `resort`
+--
+
+INSERT INTO `resort` (`resort_id`, `resort_name`, `resort_description`, `resort_region`, `resort_country_id`) VALUES
+(1, 'Albuferia ', 'Albufeira has more than 25 stunning beaches to explore. Many of these gems are Blue Flag winners, offering huge stretches of sweeping golden sands and turquoise waters. Whether you’re looking for a quiet cove or a lively beach scene, you’re sure to find it here. As for the water sports, there are loads on offer. Or you can opt for a boat trip along the coast to spot dolphins or see caves.', 1, 2),
+(2, 'San Antonio', 'San Antonio is in touch with its bars, clubs and after-dark nature and it doesn’t let up. With some of the best nightlife in the world here, get ready to party non-stop in this vibrant island resort. But you’ll find chic dining spots and remote beaches for a bit of respite while on holiday in Ibiza too.\r\n\r\n', 2, 1),
+(3, 'Alvor', 'Alvor is a picturesque town close to Portimão in the Algarve. This beautiful and charming town conserves most of its Moorish historic roots due to the fact that the whole region was under Moorish occupation for many centuries.', 1, 2),
+(4, 'Almancil', 'Almancil (Portuguese pronunciation: [aɫmɐ̃ˈsiɫ]) is a town and freguesia in the Loulé Municipality, in the affluent Golden Triangle region of the Algarve of southern Portugal. Almancil is known for its three Michelin star restaurants, the most of any town in the Algarve.', 1, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resort_details`
+--
+
+CREATE TABLE `resort_details` (
+  `resort_details_id` int(11) NOT NULL,
+  `resort_id` int(11) NOT NULL,
+  `resort_details_list_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resort_details_list`
+--
+
+CREATE TABLE `resort_details_list` (
+  `resort_details_list_id` int(11) NOT NULL,
+  `resort_details_name` varchar(255) NOT NULL,
+  `resort_details_description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `resort_details_list`
+--
+
+INSERT INTO `resort_details_list` (`resort_details_list_id`, `resort_details_name`, `resort_details_description`) VALUES
+(1, 'Faro City ', 'Faro is the capital of southern Portugal’s Algarve region. The city’s neoclassical Arco da Vila is on the site of a gate that was part of the original Moorish wall. The monumental archway leads to the old town, with its cobbled streets. Nearby is Faro Cat');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resort_region`
+--
+
+CREATE TABLE `resort_region` (
+  `resort_region_id` int(11) NOT NULL,
+  `resort_region_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `resort_region`
+--
+
+INSERT INTO `resort_region` (`resort_region_id`, `resort_region_name`) VALUES
+(1, 'The Algarve'),
+(2, 'Ibiza'),
+(3, 'Malta and Gozo');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_booking`
+--
+
+CREATE TABLE `room_booking` (
+  `room_booking_id` int(11) NOT NULL,
+  `hotel_room_id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `room_booking`
+--
+
+INSERT INTO `room_booking` (`room_booking_id`, `hotel_room_id`, `booking_id`) VALUES
+(1, 1, 1),
+(6, 1, 1),
+(7, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_facility`
+--
+
+CREATE TABLE `room_facility` (
+  `room_facility_id` int(11) NOT NULL,
+  `hotel_room_id` int(11) NOT NULL,
+  `room_facility_list_d` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_facility_list`
+--
+
+CREATE TABLE `room_facility_list` (
+  `room_facility_list_id` int(11) NOT NULL,
+  `facility_name` varchar(255) NOT NULL,
+  `facility_description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_price`
+--
+
+CREATE TABLE `room_price` (
+  `room_price_id` int(11) NOT NULL,
+  `room_price` int(11) NOT NULL,
+  `valid_from_date` date NOT NULL,
+  `valid_to_date` date NOT NULL,
+  `hotel_room_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `room_price`
+--
+
+INSERT INTO `room_price` (`room_price_id`, `room_price`, `valid_from_date`, `valid_to_date`, `hotel_room_id`) VALUES
+(1, 115, '2022-12-31', '2023-06-30', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_type`
+--
+
+CREATE TABLE `room_type` (
+  `room_type_id` int(11) NOT NULL,
+  `room_type_name` varchar(255) NOT NULL,
+  `room_type_description` varchar(255) NOT NULL,
+  `room_type_img_url` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `room_type`
+--
+
+INSERT INTO `room_type` (`room_type_id`, `room_type_name`, `room_type_description`, `room_type_img_url`) VALUES
+(1, 'Suite ', 'Luxurious suite that sleeps two people, designed for those who need space & luxury during their stay with us! ', '/HotelImages/Web/FAO_70674_Sao_Rafael_Atlantico_0819_01.jpg'),
+(2, 'Double Room with Sea View ', 'A spacious Double Room that has a view of the sea right from your own balcony! ', '/HotelImages/Web/FAO_70674_Sao_Rafael_Atlantico_0819_11.jpg'),
+(3, 'Double Room with Pool View ', 'A spacious room that sleeps 3 people that also has a view from the hotel\'s pool from the balcony! ', '/HotelImages/Web/FAO_70674_Sao_Rafael_Atlantico_0819_05.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `route`
+--
+
+CREATE TABLE `route` (
+  `route_id` int(11) NOT NULL,
+  `route_name` varchar(255) NOT NULL,
+  `dep_airport` int(11) NOT NULL,
+  `arr_airport` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `route`
+--
+
+INSERT INTO `route` (`route_id`, `route_name`, `dep_airport`, `arr_airport`) VALUES
+(1, 'Belfast - Faro ', 2, 1),
+(2, 'Faro - Belfast ', 1, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `title`
+--
+
+CREATE TABLE `title` (
+  `title_id` int(11) NOT NULL,
+  `title_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `title`
+--
+
+INSERT INTO `title` (`title_id`, `title_name`) VALUES
+(1, 'Mr.'),
+(2, 'Miss.'),
+(3, 'Ms.'),
+(4, 'Mrs.');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `address`
+--
+ALTER TABLE `address`
+  ADD PRIMARY KEY (`address_id`),
+  ADD KEY `FK_city_id` (`city_id`),
+  ADD KEY `FK_country_id` (`country_id`);
+
+--
+-- Indexes for table `airport`
+--
+ALTER TABLE `airport`
+  ADD PRIMARY KEY (`airport_id`),
+  ADD KEY `FK_address_id` (`address_id`);
+
+--
+-- Indexes for table `board`
+--
+ALTER TABLE `board`
+  ADD PRIMARY KEY (`board_id`);
+
+--
+-- Indexes for table `booking`
+--
+ALTER TABLE `booking`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `FK_customer` (`customer_id`),
+  ADD KEY `dep_flight_id` (`dep_flight_id`),
+  ADD KEY `arr_flight_id` (`ret_flight_id`),
+  ADD KEY `FK_room_booking_id` (`room_booking_id`),
+  ADD KEY `FK_booking_detail` (`booking_detail_id`);
+
+--
+-- Indexes for table `booking_detail`
+--
+ALTER TABLE `booking_detail`
+  ADD PRIMARY KEY (`booking_detail_id`);
+
+--
+-- Indexes for table `card_type`
+--
+ALTER TABLE `card_type`
+  ADD PRIMARY KEY (`card_type_id`);
+
+--
+-- Indexes for table `city`
+--
+ALTER TABLE `city`
+  ADD PRIMARY KEY (`city_id`);
+
+--
+-- Indexes for table `country`
+--
+ALTER TABLE `country`
+  ADD PRIMARY KEY (`country_id`);
+
+--
+-- Indexes for table `customer`
+--
+ALTER TABLE `customer`
+  ADD PRIMARY KEY (`customer_id`),
+  ADD KEY `FK_title_2` (`title_id`),
+  ADD KEY `address_id` (`address_id`);
+
+--
+-- Indexes for table `flight`
+--
+ALTER TABLE `flight`
+  ADD PRIMARY KEY (`flight_id`),
+  ADD KEY `FK_route_id` (`route_id`);
+
+--
+-- Indexes for table `flight_price`
+--
+ALTER TABLE `flight_price`
+  ADD PRIMARY KEY (`flight_price_id`),
+  ADD KEY `FK_passenger_type_id` (`passenger_type_id`),
+  ADD KEY `FK_flight_id` (`flight_id`);
+
+--
+-- Indexes for table `hotel`
+--
+ALTER TABLE `hotel`
+  ADD PRIMARY KEY (`hotel_id`),
+  ADD KEY `FK_address_2` (`address_id`),
+  ADD KEY `FK_resort_2` (`resort_id`);
+
+--
+-- Indexes for table `hotel_board`
+--
+ALTER TABLE `hotel_board`
+  ADD PRIMARY KEY (`hotel_board_id`),
+  ADD KEY `FK_hotel_3` (`hotel_id`),
+  ADD KEY `FK_board_id` (`board_id`);
+
+--
+-- Indexes for table `hotel_features`
+--
+ALTER TABLE `hotel_features`
+  ADD PRIMARY KEY (`hotel_features_id`),
+  ADD KEY `FK_hotel_4` (`hotel_id`),
+  ADD KEY `FK_hotel_features_list` (`hotel_features_list_id`);
+
+--
+-- Indexes for table `hotel_features_list`
+--
+ALTER TABLE `hotel_features_list`
+  ADD PRIMARY KEY (`hotel_features_list_id`);
+
+--
+-- Indexes for table `hotel_room`
+--
+ALTER TABLE `hotel_room`
+  ADD PRIMARY KEY (`hotel_room_id`),
+  ADD KEY `FK_room_type` (`room_type_id`),
+  ADD KEY `FK_hotel` (`hotel_id`);
+
+--
+-- Indexes for table `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `FK_hotel_2` (`hotel_id`);
+
+--
+-- Indexes for table `passenger`
+--
+ALTER TABLE `passenger`
+  ADD PRIMARY KEY (`passenger_id`),
+  ADD KEY `FK_passenger_type_id_2` (`passenger_type_id`),
+  ADD KEY `FK_passenger_passport` (`passenger_passport`),
+  ADD KEY `FK_title` (`title_id`),
+  ADD KEY `booking_id` (`booking_id`);
+
+--
+-- Indexes for table `passenger_passport`
+--
+ALTER TABLE `passenger_passport`
+  ADD PRIMARY KEY (`passenger_passport_id`),
+  ADD KEY `FK_country` (`country_id`);
+
+--
+-- Indexes for table `passenger_type`
+--
+ALTER TABLE `passenger_type`
+  ADD PRIMARY KEY (`passenger_type_id`);
+
+--
+-- Indexes for table `payment`
+--
+ALTER TABLE `payment`
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `FK_booking_2` (`booking_id`),
+  ADD KEY `FK_payment_card` (`payment_card_id`);
+
+--
+-- Indexes for table `payment_card`
+--
+ALTER TABLE `payment_card`
+  ADD PRIMARY KEY (`payment_card_id`),
+  ADD KEY `FK_card_type` (`card_type_id`);
+
+--
+-- Indexes for table `resort`
+--
+ALTER TABLE `resort`
+  ADD PRIMARY KEY (`resort_id`),
+  ADD KEY `FK_resort_country` (`resort_country_id`),
+  ADD KEY `FK_resort_region` (`resort_region`);
+
+--
+-- Indexes for table `resort_details`
+--
+ALTER TABLE `resort_details`
+  ADD PRIMARY KEY (`resort_details_id`),
+  ADD KEY `FK_resort_details_list` (`resort_details_list_id`),
+  ADD KEY `FK_resort` (`resort_id`);
+
+--
+-- Indexes for table `resort_details_list`
+--
+ALTER TABLE `resort_details_list`
+  ADD PRIMARY KEY (`resort_details_list_id`);
+
+--
+-- Indexes for table `resort_region`
+--
+ALTER TABLE `resort_region`
+  ADD PRIMARY KEY (`resort_region_id`);
+
+--
+-- Indexes for table `room_booking`
+--
+ALTER TABLE `room_booking`
+  ADD PRIMARY KEY (`room_booking_id`),
+  ADD KEY `FK_hotel_room` (`hotel_room_id`);
+
+--
+-- Indexes for table `room_facility`
+--
+ALTER TABLE `room_facility`
+  ADD PRIMARY KEY (`room_facility_id`),
+  ADD KEY `FK_room_facility_list` (`room_facility_list_d`),
+  ADD KEY `FK_hotel_room_id` (`hotel_room_id`);
+
+--
+-- Indexes for table `room_facility_list`
+--
+ALTER TABLE `room_facility_list`
+  ADD PRIMARY KEY (`room_facility_list_id`);
+
+--
+-- Indexes for table `room_price`
+--
+ALTER TABLE `room_price`
+  ADD PRIMARY KEY (`room_price_id`),
+  ADD KEY `FK_hotel_room_price` (`hotel_room_id`);
+
+--
+-- Indexes for table `room_type`
+--
+ALTER TABLE `room_type`
+  ADD PRIMARY KEY (`room_type_id`);
+
+--
+-- Indexes for table `route`
+--
+ALTER TABLE `route`
+  ADD PRIMARY KEY (`route_id`),
+  ADD KEY `FK_dep_airport` (`dep_airport`),
+  ADD KEY `FK_arr_airport` (`arr_airport`);
+
+--
+-- Indexes for table `title`
+--
+ALTER TABLE `title`
+  ADD PRIMARY KEY (`title_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `address`
+--
+ALTER TABLE `address`
+  MODIFY `address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `airport`
+--
+ALTER TABLE `airport`
+  MODIFY `airport_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `board`
+--
+ALTER TABLE `board`
+  MODIFY `board_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `booking`
+--
+ALTER TABLE `booking`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `booking_detail`
+--
+ALTER TABLE `booking_detail`
+  MODIFY `booking_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `card_type`
+--
+ALTER TABLE `card_type`
+  MODIFY `card_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `city`
+--
+ALTER TABLE `city`
+  MODIFY `city_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `country`
+--
+ALTER TABLE `country`
+  MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `customer`
+--
+ALTER TABLE `customer`
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `flight`
+--
+ALTER TABLE `flight`
+  MODIFY `flight_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `flight_price`
+--
+ALTER TABLE `flight_price`
+  MODIFY `flight_price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `hotel`
+--
+ALTER TABLE `hotel`
+  MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `hotel_board`
+--
+ALTER TABLE `hotel_board`
+  MODIFY `hotel_board_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `hotel_features`
+--
+ALTER TABLE `hotel_features`
+  MODIFY `hotel_features_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `hotel_features_list`
+--
+ALTER TABLE `hotel_features_list`
+  MODIFY `hotel_features_list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `hotel_room`
+--
+ALTER TABLE `hotel_room`
+  MODIFY `hotel_room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `images`
+--
+ALTER TABLE `images`
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `passenger`
+--
+ALTER TABLE `passenger`
+  MODIFY `passenger_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `passenger_passport`
+--
+ALTER TABLE `passenger_passport`
+  MODIFY `passenger_passport_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `passenger_type`
+--
+ALTER TABLE `passenger_type`
+  MODIFY `passenger_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `payment`
+--
+ALTER TABLE `payment`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `payment_card`
+--
+ALTER TABLE `payment_card`
+  MODIFY `payment_card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `resort`
+--
+ALTER TABLE `resort`
+  MODIFY `resort_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `resort_details`
+--
+ALTER TABLE `resort_details`
+  MODIFY `resort_details_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `resort_details_list`
+--
+ALTER TABLE `resort_details_list`
+  MODIFY `resort_details_list_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `resort_region`
+--
+ALTER TABLE `resort_region`
+  MODIFY `resort_region_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `room_booking`
+--
+ALTER TABLE `room_booking`
+  MODIFY `room_booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `room_facility`
+--
+ALTER TABLE `room_facility`
+  MODIFY `room_facility_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `room_facility_list`
+--
+ALTER TABLE `room_facility_list`
+  MODIFY `room_facility_list_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `room_price`
+--
+ALTER TABLE `room_price`
+  MODIFY `room_price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `room_type`
+--
+ALTER TABLE `room_type`
+  MODIFY `room_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `route`
+--
+ALTER TABLE `route`
+  MODIFY `route_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `title`
+--
+ALTER TABLE `title`
+  MODIFY `title_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `address`
+--
+ALTER TABLE `address`
+  ADD CONSTRAINT `FK_city_id` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
+  ADD CONSTRAINT `FK_country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`country_id`);
+
+--
+-- Constraints for table `airport`
+--
+ALTER TABLE `airport`
+  ADD CONSTRAINT `FK_address_id` FOREIGN KEY (`address_id`) REFERENCES `address` (`address_id`);
+
+--
+-- Constraints for table `booking`
+--
+ALTER TABLE `booking`
+  ADD CONSTRAINT `FK_booking_detail` FOREIGN KEY (`booking_detail_id`) REFERENCES `booking_detail` (`booking_detail_id`),
+  ADD CONSTRAINT `FK_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+  ADD CONSTRAINT `FK_room_booking_id` FOREIGN KEY (`room_booking_id`) REFERENCES `room_booking` (`room_booking_id`),
+  ADD CONSTRAINT `arr_flight_id` FOREIGN KEY (`ret_flight_id`) REFERENCES `flight` (`flight_id`),
+  ADD CONSTRAINT `dep_flight_id` FOREIGN KEY (`dep_flight_id`) REFERENCES `flight` (`flight_id`);
+
+--
+-- Constraints for table `customer`
+--
+ALTER TABLE `customer`
+  ADD CONSTRAINT `FK_title_2` FOREIGN KEY (`title_id`) REFERENCES `title` (`title_id`),
+  ADD CONSTRAINT `address_id` FOREIGN KEY (`address_id`) REFERENCES `address` (`address_id`);
+
+--
+-- Constraints for table `flight`
+--
+ALTER TABLE `flight`
+  ADD CONSTRAINT `FK_route_id` FOREIGN KEY (`route_id`) REFERENCES `route` (`route_id`);
+
+--
+-- Constraints for table `flight_price`
+--
+ALTER TABLE `flight_price`
+  ADD CONSTRAINT `FK_flight_id` FOREIGN KEY (`flight_id`) REFERENCES `flight` (`flight_id`),
+  ADD CONSTRAINT `FK_passenger_type_id` FOREIGN KEY (`passenger_type_id`) REFERENCES `passenger_type` (`passenger_type_id`);
+
+--
+-- Constraints for table `hotel`
+--
+ALTER TABLE `hotel`
+  ADD CONSTRAINT `FK_address_2` FOREIGN KEY (`address_id`) REFERENCES `address` (`address_id`),
+  ADD CONSTRAINT `FK_resort_2` FOREIGN KEY (`resort_id`) REFERENCES `resort` (`resort_id`);
+
+--
+-- Constraints for table `hotel_board`
+--
+ALTER TABLE `hotel_board`
+  ADD CONSTRAINT `FK_board_id` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`),
+  ADD CONSTRAINT `FK_hotel_3` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`hotel_id`);
+
+--
+-- Constraints for table `hotel_features`
+--
+ALTER TABLE `hotel_features`
+  ADD CONSTRAINT `FK_hotel_4` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`hotel_id`),
+  ADD CONSTRAINT `FK_hotel_features_list` FOREIGN KEY (`hotel_features_list_id`) REFERENCES `hotel_features_list` (`hotel_features_list_id`);
+
+--
+-- Constraints for table `hotel_room`
+--
+ALTER TABLE `hotel_room`
+  ADD CONSTRAINT `FK_hotel` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`hotel_id`),
+  ADD CONSTRAINT `FK_room_type` FOREIGN KEY (`room_type_id`) REFERENCES `room_type` (`room_type_id`);
+
+--
+-- Constraints for table `images`
+--
+ALTER TABLE `images`
+  ADD CONSTRAINT `FK_hotel_2` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`hotel_id`);
+
+--
+-- Constraints for table `passenger`
+--
+ALTER TABLE `passenger`
+  ADD CONSTRAINT `FK_passenger_passport` FOREIGN KEY (`passenger_passport`) REFERENCES `passenger_passport` (`passenger_passport_id`),
+  ADD CONSTRAINT `FK_passenger_type_id_2` FOREIGN KEY (`passenger_type_id`) REFERENCES `passenger_type` (`passenger_type_id`),
+  ADD CONSTRAINT `FK_title` FOREIGN KEY (`title_id`) REFERENCES `title` (`title_id`),
+  ADD CONSTRAINT `booking_id` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`);
+
+--
+-- Constraints for table `passenger_passport`
+--
+ALTER TABLE `passenger_passport`
+  ADD CONSTRAINT `FK_country` FOREIGN KEY (`country_id`) REFERENCES `country` (`country_id`);
+
+--
+-- Constraints for table `payment`
+--
+ALTER TABLE `payment`
+  ADD CONSTRAINT `FK_booking_2` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`),
+  ADD CONSTRAINT `FK_payment_card` FOREIGN KEY (`payment_card_id`) REFERENCES `payment_card` (`payment_card_id`);
+
+--
+-- Constraints for table `payment_card`
+--
+ALTER TABLE `payment_card`
+  ADD CONSTRAINT `FK_card_type` FOREIGN KEY (`card_type_id`) REFERENCES `card_type` (`card_type_id`);
+
+--
+-- Constraints for table `resort`
+--
+ALTER TABLE `resort`
+  ADD CONSTRAINT `FK_resort_country` FOREIGN KEY (`resort_country_id`) REFERENCES `country` (`country_id`),
+  ADD CONSTRAINT `FK_resort_region` FOREIGN KEY (`resort_region`) REFERENCES `resort_region` (`resort_region_id`);
+
+--
+-- Constraints for table `resort_details`
+--
+ALTER TABLE `resort_details`
+  ADD CONSTRAINT `FK_resort` FOREIGN KEY (`resort_id`) REFERENCES `resort` (`resort_id`),
+  ADD CONSTRAINT `FK_resort_details_list` FOREIGN KEY (`resort_details_list_id`) REFERENCES `resort_details_list` (`resort_details_list_id`);
+
+--
+-- Constraints for table `room_booking`
+--
+ALTER TABLE `room_booking`
+  ADD CONSTRAINT `FK_hotel_room` FOREIGN KEY (`hotel_room_id`) REFERENCES `hotel_room` (`hotel_room_id`);
+
+--
+-- Constraints for table `room_facility`
+--
+ALTER TABLE `room_facility`
+  ADD CONSTRAINT `FK_hotel_room_id` FOREIGN KEY (`hotel_room_id`) REFERENCES `hotel_room` (`hotel_room_id`),
+  ADD CONSTRAINT `FK_room_facility_list` FOREIGN KEY (`room_facility_list_d`) REFERENCES `room_facility_list` (`room_facility_list_id`);
+
+--
+-- Constraints for table `room_price`
+--
+ALTER TABLE `room_price`
+  ADD CONSTRAINT `FK_hotel_room_price` FOREIGN KEY (`hotel_room_id`) REFERENCES `hotel_room` (`hotel_room_id`);
+
+--
+-- Constraints for table `route`
+--
+ALTER TABLE `route`
+  ADD CONSTRAINT `FK_arr_airport` FOREIGN KEY (`arr_airport`) REFERENCES `airport` (`airport_id`),
+  ADD CONSTRAINT `FK_dep_airport` FOREIGN KEY (`dep_airport`) REFERENCES `airport` (`airport_id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
