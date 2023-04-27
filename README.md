@@ -31,12 +31,6 @@ The database evolved through continuous refinement and examination, with various
 - Redundancy elimination
 - Data integrity with foreign key constraints
 
-<h2>Normalization:</h2>
-
-- First Normal Form (1NF)
-- Second Normal Form (2NF)
-- Third Normal Form (3NF)
-
 <h2>Examples of Good Design Choices</h2>
 
 - Title Table: Created a separate table for titles to reduce redundancy.
